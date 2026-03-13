@@ -4,10 +4,8 @@
 
 namespace AutoSalonGrida.Migrations
 {
-    /// <inheritdoc />
     public partial class MigrationAutoSalon : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -31,6 +29,8 @@ namespace AutoSalonGrida.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Age = table.Column<int>(type: "int", nullable: false),
+                    Login = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     IdRole = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -48,16 +48,18 @@ namespace AutoSalonGrida.Migrations
                 name: "IX_Users_IdRole",
                 table: "Users",
                 column: "IdRole");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Login",
+                table: "Users",
+                column: "Login",
+                unique: true);
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Roles");
+            migrationBuilder.DropTable(name: "Users");
+            migrationBuilder.DropTable(name: "Roles");
         }
     }
 }

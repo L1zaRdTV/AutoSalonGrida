@@ -1,4 +1,4 @@
-﻿using AutoSalonGrida.Models;
+using AutoSalonGrida.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AutoSalonGrida.Data
@@ -9,5 +9,13 @@ namespace AutoSalonGrida.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Login)
+                .IsUnique();
+        }
     }
 }

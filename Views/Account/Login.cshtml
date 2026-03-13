@@ -1,0 +1,29 @@
+@model AutoSalonGrida.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Авторизация";
+}
+
+<div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-4">
+        <h2 class="mb-3">Авторизация</h2>
+        <form asp-action="Login" method="post" class="card card-body shadow-sm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-3">
+                <label asp-for="Login" class="form-label">Логин</label>
+                <input asp-for="Login" class="form-control" />
+                <span asp-validation-for="Login" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label">Пароль</label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Войти</button>
+            <a asp-action="Register" class="btn btn-link mt-2">Нет аккаунта? Зарегистрироваться</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
