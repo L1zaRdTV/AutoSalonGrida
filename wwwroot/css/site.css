@@ -1,2 +1,15 @@
-.card-elevated { border: 0; box-shadow: 0 .5rem 1rem rgba(0,0,0,.08); }
-.hero { background: linear-gradient(135deg,#0d6efd,#0a58ca); color:#fff; border-radius:1rem; }
+:root { color-scheme: dark; }
+body.theme-dark { background: #0b0f19; color: #f2f5ff; }
+.glass-nav { background: rgba(8,13,22,.88); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,.08); }
+.card-elevated, .car-card { background: #121a2b; border: 1px solid rgba(255,255,255,.08); box-shadow: 0 10px 35px rgba(0,0,0,.3); }
+.hero-banner { background: radial-gradient(circle at 25% 25%, #213860, #0f1728 60%); border: 1px solid rgba(255,255,255,.08); }
+.hero-car { max-height: 320px; }
+.car-cover { height: 220px; object-fit: cover; }
+.car-card { transition: transform .3s ease, box-shadow .3s ease; }
+.car-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(10,132,255,.25); }
+.category-tile { background: #121a2b; border: 1px solid rgba(255,255,255,.08); color: #fff; text-decoration: none; transition: all .2s; }
+.category-tile:hover { border-color: #0d6efd; color: #8dc4ff; transform: translateY(-4px); }
+.detail-thumb { height: 110px; width: 100%; object-fit: cover; }
+.form-control, .form-select { background-color: #0f1728; color: #fff; border-color: rgba(255,255,255,.15); }
+.form-control:focus, .form-select:focus { background-color: #121a2b; color: #fff; }
+.list-group-item { color: #d3def6; border-color: rgba(255,255,255,.1); }

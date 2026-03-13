@@ -1,0 +1,9 @@
+@model IEnumerable<string>
+@{ ViewData["Title"] = "Brands"; }
+<h1 class="mb-4">Бренды</h1>
+<div class="d-flex flex-wrap gap-2">
+@foreach (var brand in Model)
+{
+    <a asp-controller="Cars" asp-action="Index" asp-route-brand="@brand" class="btn btn-outline-light">@brand</a>
+}
+</div>

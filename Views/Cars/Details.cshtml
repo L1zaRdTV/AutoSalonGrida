@@ -1,0 +1,27 @@
+@model AutoSalonGrida.Models.ViewModels.CarDetailsViewModel
+@{ ViewData["Title"] = $"{Model.Car.Brand} {Model.Car.Model}"; }
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <img src="@Model.Car.ImageUrl" class="img-fluid rounded-4 mb-3" alt="@Model.Car.Brand @Model.Car.Model" />
+        <div class="row g-2">
+            @foreach (var image in Model.Gallery)
+            {
+                <div class="col-4"><img src="@image.ImagePath" class="img-fluid rounded-3 detail-thumb" /></div>
+            }
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <h1>@Model.Car.Brand @Model.Car.Model</h1>
+        <p class="display-6 text-primary fw-bold">@Model.Car.Price.ToString("C0")</p>
+        <p>@Model.Car.Description</p>
+        <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item bg-transparent">Год: @Model.Car.Year</li>
+            <li class="list-group-item bg-transparent">Категория: @Model.Car.Category?.Name</li>
+            <li class="list-group-item bg-transparent">Тип кузова: @Model.Car.BodyType</li>
+            <li class="list-group-item bg-transparent">Двигатель: @Model.Car.EngineType</li>
+            <li class="list-group-item bg-transparent">Пробег: @Model.Car.Mileage км</li>
+        </ul>
+        <a class="btn btn-primary btn-lg" asp-controller="Account" asp-action="Profile">Связаться</a>
+    </div>
+</div>

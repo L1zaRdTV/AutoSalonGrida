@@ -1,0 +1,8 @@
+@model AutoSalonGrida.Models.Car
+@{ ViewData["Title"] = "Delete Car"; }
+<h1>Delete Car</h1>
+<div class="alert alert-danger">Удалить @Model.Brand @Model.Model?</div>
+<form method="post">
+    <button class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-outline-light">Cancel</a>
+</form>
