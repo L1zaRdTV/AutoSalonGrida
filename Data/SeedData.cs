@@ -6,7 +6,7 @@ namespace AutoSalonGrida.Data;
 public static class SeedData
 {
     public static async Task InitializeAsync(IServiceProvider serviceProvider)
-    {
+    {   
         var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
