@@ -6,7 +6,7 @@ public class RegisterViewModel
 {
     [Required]
     [StringLength(100)]
-    [Display(Name = "Full Name")]
+    [Display(Name = "ФИО")]
     public string FullName { get; set; } = string.Empty;
 
     [Required]
@@ -17,16 +17,17 @@ public class RegisterViewModel
     [Required]
     [StringLength(100, MinimumLength = 6)]
     [DataType(DataType.Password)]
-    [Display(Name = "Password")]
+    [Display(Name = "Пароль")]
     public string Password { get; set; } = string.Empty;
 
     [Required]
     [DataType(DataType.Password)]
     [Compare("Password")]
-    [Display(Name = "Confirm password")]
+    [Display(Name = "Подтверждение пароля")]
     public string ConfirmPassword { get; set; } = string.Empty;
 
     [Required]
-    [RegularExpression("^(User|Admin)$")]
-    public string Role { get; set; } = "User";
+    [RegularExpression("^(Пользователь|Администратор)$")]
+    [Display(Name = "Роль")]
+    public string Role { get; set; } = "Пользователь";
 }

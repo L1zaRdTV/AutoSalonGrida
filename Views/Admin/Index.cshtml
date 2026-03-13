@@ -1,11 +1,11 @@
 @model IEnumerable<AutoSalonGrida.Models.Car>
-@{ ViewData["Title"] = "Admin Panel"; }
+@{ ViewData["Title"] = "Панель администратора"; }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1>Admin Panel</h1>
-    <a class="btn btn-primary" asp-action="Create">Create</a>
+    <h1>Панель администратора</h1>
+    <a class="btn btn-primary" asp-action="Create">Добавить автомобиль</a>
 </div>
-<table class="table table-dark table-striped align-middle">
+<table class="table table-striped align-middle bg-white shadow-sm">
     <thead><tr><th>Фото</th><th>Авто</th><th>Категория</th><th>Цена</th><th></th></tr></thead>
     <tbody>
     @foreach (var car in Model)
@@ -14,13 +14,13 @@
             <td><img src="@car.ImageUrl" width="90" class="rounded"/></td>
             <td>@car.Brand @car.Model (@car.Year)</td>
             <td>@car.Category?.Name</td>
-            <td>@car.Price.ToString("C0")</td>
+            <td>@car.Price.ToString("N0") ₽</td>
             <td class="text-end">
-                <a asp-action="Edit" asp-route-id="@car.Id" class="btn btn-sm btn-outline-info">Edit</a>
-                <a asp-action="Delete" asp-route-id="@car.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                <a asp-action="Edit" asp-route-id="@car.Id" class="btn btn-sm btn-outline-primary">Редактировать</a>
+                <a asp-action="Delete" asp-route-id="@car.Id" class="btn btn-sm btn-outline-danger">Удалить</a>
             </td>
         </tr>
     }
     </tbody>
 </table>
-<a class="btn btn-outline-light" asp-action="Categories">Управление категориями</a>
+<a class="btn btn-outline-primary" asp-action="Categories">Управление категориями</a>

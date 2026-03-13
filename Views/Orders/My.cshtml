@@ -1,0 +1,29 @@
+@model IEnumerable<AutoSalonGrida.Models.Order>
+@{ ViewData["Title"] = "Мои заказы"; }
+<h1 class="mb-4">Мои заказы</h1>
+@if (!Model.Any())
+{
+    <p>У вас пока нет заказов.</p>
+}
+else
+{
+    @foreach (var order in Model)
+    {
+        <div class="card mb-3 shadow-sm border-0">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h5>Заказ №@order.Id</h5>
+                    <span class="badge bg-success">@order.Status</span>
+                </div>
+                <p class="text-muted mb-2">Дата: @order.OrderDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</p>
+                <ul>
+                    @foreach (var item in order.Items)
+                    {
+                        <li>@item.Car?.Brand @item.Car?.Model — @item.Quantity × @item.UnitPrice.ToString("N0") ₽</li>
+                    }
+                </ul>
+                <p class="fw-bold mb-0">Итого: @order.TotalPrice.ToString("N0") ₽</p>
+            </div>
+        </div>
+    }
+}

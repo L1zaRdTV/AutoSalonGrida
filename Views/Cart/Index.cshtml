@@ -1,0 +1,43 @@
+@model AutoSalonGrida.Models.ViewModels.CartViewModel
+@{ ViewData["Title"] = "Корзина"; }
+<h1 class="mb-4">Корзина</h1>
+@if (!Model.Items.Any())
+{
+    <p>Корзина пока пуста.</p>
+}
+else
+{
+    <table class="table align-middle bg-white shadow-sm">
+        <thead><tr><th>Автомобиль</th><th>Цена</th><th>Количество</th><th>Сумма</th><th></th></tr></thead>
+        <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.Car?.Brand @item.Car?.Model</td>
+                <td>@item.Car?.Price.ToString("N0") ₽</td>
+                <td>
+                    <form asp-action="UpdateQuantity" method="post" class="d-flex gap-2">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="itemId" value="@item.Id" />
+                        <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control" style="max-width:100px" />
+                        <button class="btn btn-outline-primary" type="submit">Обновить</button>
+                    </form>
+                </td>
+                <td>@(((item.Car?.Price ?? 0) * item.Quantity).ToString("N0")) ₽</td>
+                <td>
+                    <form asp-action="Remove" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="itemId" value="@item.Id" />
+                        <button class="btn btn-outline-danger" type="submit">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    <div class="text-end mb-3"><h4>Итого: @Model.TotalPrice.ToString("N0") ₽</h4></div>
+    <form asp-action="Checkout" method="post" class="text-end">
+        @Html.AntiForgeryToken()
+        <button class="btn btn-success btn-lg" type="submit">Купить</button>
+    </form>
+}
