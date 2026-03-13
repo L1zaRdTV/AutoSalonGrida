@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace AutoSalonGrida.Models
 {
@@ -7,9 +6,12 @@ namespace AutoSalonGrida.Models
     {
         [Key]
         public int IdRole { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Укажите название роли.")]
         [StringLength(50)]
-        public string? Name { get; set; }
+        [Display(Name = "Название роли")]
+        public string Name { get; set; } = string.Empty;
+
         public ICollection<User>? Users { get; set; }
     }
 }
