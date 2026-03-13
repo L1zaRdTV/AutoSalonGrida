@@ -1,116 +1,117 @@
-using AutoSalonGrida.Data;
 using AutoSalonGrida.Models;
-using AutoSalonGrida.Services;
-using AutoSalonGrida.ViewModels;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using AutoSalonGrida.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
-namespace AutoSalonGrida.Controllers
+namespace AutoSalonGrida.Controllers;
+
+public class AccountController : Controller
 {
-    public class AccountController : Controller
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+
+    public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
     {
-        private readonly ApplicationDbContext _context;
+        _userManager = userManager;
+        _signInManager = signInManager;
+    }
 
-        public AccountController(ApplicationDbContext context)
+    [AllowAnonymous]
+    public IActionResult Login(string? returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [AllowAnonymous]
+    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+
+        if (!ModelState.IsValid)
         {
-            _context = context;
+            return View(model);
         }
 
-        [AllowAnonymous]
-        public IActionResult Login() => View();
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+        if (result.Succeeded)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            var hash = PasswordHasher.Hash(model.Password);
-            var user = await _context.Users.Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.Login == model.Login && u.PasswordHash == hash);
-
-            if (user is null || user.Role is null)
-            {
-                ModelState.AddModelError(string.Empty, "Неверный логин или пароль.");
-                return View(model);
-            }
-
-            var claims = new List<Claim>
-            {
-                new(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
-                new(ClaimTypes.Name, user.Name),
-                new(ClaimTypes.Role, user.Role.Name),
-                new("Login", user.Login)
-            };
-
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(identity));
-
-            TempData["Success"] = "Вы успешно вошли в систему.";
-            return RedirectToAction("Index", "Users");
+            return RedirectToLocal(returnUrl);
         }
 
-        [AllowAnonymous]
-        public IActionResult Register() => View();
+        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+        return View(model);
+    }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+    [AllowAnonymous]
+    public IActionResult Register() => View();
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [AllowAnonymous]
+    public async Task<IActionResult> Register(RegisterViewModel model)
+    {
+        if (!ModelState.IsValid)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            var existing = await _context.Users.AnyAsync(u => u.Login == model.Login);
-            if (existing)
-            {
-                ModelState.AddModelError(nameof(model.Login), "Пользователь с таким логином уже существует.");
-                return View(model);
-            }
-
-            var userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "Пользователь");
-            if (userRole is null)
-            {
-                ModelState.AddModelError(string.Empty, "Роль 'Пользователь' не найдена в системе.");
-                return View(model);
-            }
-
-            var user = new User
-            {
-                Name = model.Name,
-                Age = model.Age,
-                Login = model.Login,
-                PasswordHash = PasswordHasher.Hash(model.Password),
-                IdRole = userRole.IdRole
-            };
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            TempData["Success"] = "Регистрация прошла успешно. Теперь войдите в систему.";
-            return RedirectToAction(nameof(Login));
+            return View(model);
         }
 
-        [Authorize]
-        public async Task<IActionResult> Logout()
+        var user = new ApplicationUser
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            TempData["Success"] = "Вы вышли из системы.";
-            return RedirectToAction(nameof(Login));
+            UserName = model.Email,
+            Email = model.Email,
+            FullName = model.FullName
+        };
+
+        var result = await _userManager.CreateAsync(user, model.Password);
+        if (result.Succeeded)
+        {
+            await _userManager.AddToRoleAsync(user, "User");
+            await _signInManager.SignInAsync(user, isPersistent: false);
+            return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult AccessDenied() => View();
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
+
+        return View(model);
+    }
+
+    [Authorize]
+    public async Task<IActionResult> Profile()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null)
+        {
+            return Challenge();
+        }
+
+        return View(user);
+    }
+
+    [Authorize]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return RedirectToAction(nameof(Login));
+    }
+
+    public IActionResult AccessDenied() => View();
+
+    private IActionResult RedirectToLocal(string? returnUrl)
+    {
+        if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+        {
+            return Redirect(returnUrl);
+        }
+
+        return RedirectToAction("Index", "Home");
     }
 }
