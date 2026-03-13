@@ -1,9 +1,51 @@
+@using AutoSalonGrida.Models
 @{
     ViewData["Title"] = "Home";
+    var popularCars = ViewBag.PopularCars as List<Car> ?? new();
+    var categories = ViewBag.Categories as List<Category> ?? new();
 }
 
-<div class="p-5 hero card-elevated">
-    <h1 class="display-5 fw-bold">AutoSalonGrida Management System</h1>
-    <p class="lead">ASP.NET Core MVC + Entity Framework Core + SQL Server solution with roles, authentication and full product management.</p>
-    <a asp-controller="Products" asp-action="Index" class="btn btn-light btn-lg"><i class="fa-solid fa-table"></i> Open Table</a>
-</div>
+<section class="hero-banner rounded-4 overflow-hidden p-4 p-lg-5 mb-5">
+    <div class="row align-items-center g-4">
+        <div class="col-lg-6">
+            <h1 class="display-4 fw-bold">Найдите автомобиль вашей мечты</h1>
+            <p class="lead text-light-emphasis">Премиальный каталог новых и проверенных авто: SUV, седаны, спорт и электрокары.</p>
+            <a class="btn btn-primary btn-lg" asp-controller="Cars" asp-action="Index">Смотреть все автомобили</a>
+        </div>
+        <div class="col-lg-6 text-center">
+            <img src="/images/cars/hero-car.svg" class="img-fluid hero-car" alt="Hero car" />
+        </div>
+    </div>
+</section>
+
+<section class="mb-5">
+    <h2 class="h3 mb-3">Популярные автомобили</h2>
+    <div class="row g-4">
+        @foreach (var car in popularCars)
+        {
+            <div class="col-md-6 col-xl-4">
+                <div class="card h-100 car-card">
+                    <img src="@car.ImageUrl" class="card-img-top car-cover" alt="@car.Brand @car.Model" />
+                    <div class="card-body">
+                        <h5 class="card-title">@car.Brand @car.Model</h5>
+                        <p class="text-secondary mb-1">@car.Year · @car.Category?.Name · @car.BodyType</p>
+                        <p class="fs-5 text-primary fw-bold">@car.Price.ToString("C0")</p>
+                        <a class="btn btn-outline-light" asp-controller="Cars" asp-action="Details" asp-route-id="@car.Id">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<section>
+    <h2 class="h3 mb-3">Категории</h2>
+    <div class="row g-3">
+        @foreach (var category in categories)
+        {
+            <div class="col-6 col-md-3">
+                <a asp-controller="Cars" asp-action="Index" asp-route-categoryId="@category.Id" class="category-tile d-block text-center p-3 rounded-3">@category.Name</a>
+            </div>
+        }
+    </div>
+</section>

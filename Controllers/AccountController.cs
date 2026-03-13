@@ -69,7 +69,8 @@ public class AccountController : Controller
         var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {
-            await _userManager.AddToRoleAsync(user, "User");
+            var role = model.Role is "Admin" or "User" ? model.Role : "User";
+            await _userManager.AddToRoleAsync(user, role);
             await _signInManager.SignInAsync(user, isPersistent: false);
             return RedirectToAction("Index", "Home");
         }

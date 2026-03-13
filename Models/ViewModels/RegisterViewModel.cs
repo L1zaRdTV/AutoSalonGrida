@@ -25,4 +25,8 @@ public class RegisterViewModel
     [Compare("Password")]
     [Display(Name = "Confirm password")]
     public string ConfirmPassword { get; set; } = string.Empty;
+
+    [Required]
+    [RegularExpression("^(User|Admin)$")]
+    public string Role { get; set; } = "User";
 }

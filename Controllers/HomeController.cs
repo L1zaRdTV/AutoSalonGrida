@@ -1,12 +1,30 @@
 using System.Diagnostics;
+using AutoSalonGrida.Data;
 using AutoSalonGrida.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AutoSalonGrida.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index() => View();
+    private readonly ApplicationDbContext _context;
+
+    public HomeController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        ViewBag.PopularCars = await _context.Cars.Include(c => c.Category)
+            .OrderByDescending(c => c.PopularityScore)
+            .Take(6)
+            .ToListAsync();
+
+        ViewBag.Categories = await _context.Categories.OrderBy(c => c.Name).ToListAsync();
+        return View();
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error() => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
