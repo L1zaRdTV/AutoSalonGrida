@@ -7,6 +7,9 @@ public class ApplicationUser : IdentityUser
 {
     [Required]
     [StringLength(100)]
-    [Display(Name = "Full Name")]
+    [Display(Name = "ФИО")]
     public string FullName { get; set; } = string.Empty;
+
+    public ICollection<Cart> Carts { get; set; } = new List<Cart>();
+    public ICollection<Order> Orders { get; set; } = new List<Order>();
 }

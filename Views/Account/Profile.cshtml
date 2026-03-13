@@ -1,12 +1,10 @@
 @model AutoSalonGrida.Models.ApplicationUser
-@{
-    ViewData["Title"] = "Profile";
-}
-<div class="card card-elevated">
+@{ ViewData["Title"] = "Профиль"; }
+<div class="card shadow-sm border-0">
     <div class="card-body">
-        <h3><i class="fa-solid fa-id-card"></i> Profile</h3>
-        <p><strong>Name:</strong> @Model.FullName</p>
+        <h3><i class="fa-solid fa-id-card"></i> Профиль</h3>
+        <p><strong>ФИО:</strong> @Model.FullName</p>
         <p><strong>Email:</strong> @Model.Email</p>
-        <p><strong>Username:</strong> @Model.UserName</p>
+        <p><strong>Логин:</strong> @Model.UserName</p>
     </div>
 </div>

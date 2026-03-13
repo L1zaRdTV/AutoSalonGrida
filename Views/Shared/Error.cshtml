@@ -1,11 +1,9 @@
 @model ErrorViewModel
-@{
-    ViewData["Title"] = "Error";
-}
+@{ ViewData["Title"] = "Ошибка"; }
 <div class="alert alert-danger">
-    <h2>Something went wrong.</h2>
+    <h2>Произошла ошибка.</h2>
     @if (Model?.ShowRequestId ?? false)
     {
-        <p>Request ID: <code>@Model.RequestId</code></p>
+        <p>Идентификатор запроса: <code>@Model.RequestId</code></p>
     }
 </div>

@@ -1,6 +1,6 @@
 @using AutoSalonGrida.Models
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "Главная";
     var popularCars = ViewBag.PopularCars as List<Car> ?? new();
     var categories = ViewBag.Categories as List<Category> ?? new();
 }
@@ -8,12 +8,12 @@
 <section class="hero-banner rounded-4 overflow-hidden p-4 p-lg-5 mb-5">
     <div class="row align-items-center g-4">
         <div class="col-lg-6">
-            <h1 class="display-4 fw-bold">Найдите автомобиль вашей мечты</h1>
-            <p class="lead text-light-emphasis">Премиальный каталог новых и проверенных авто: SUV, седаны, спорт и электрокары.</p>
-            <a class="btn btn-primary btn-lg" asp-controller="Cars" asp-action="Index">Смотреть все автомобили</a>
+            <h1 class="display-5 fw-bold">Автосалон новых и проверенных автомобилей</h1>
+            <p class="lead text-secondary">Подберите идеальный автомобиль: от городских седанов до люксовых и спортивных моделей.</p>
+            <a class="btn btn-primary btn-lg" asp-controller="Cars" asp-action="Index">Перейти в каталог</a>
         </div>
         <div class="col-lg-6 text-center">
-            <img src="/images/cars/hero-car.svg" class="img-fluid hero-car" alt="Hero car" />
+            <img src="/images/cars/hero-car.svg" class="img-fluid hero-car" alt="Автомобиль" />
         </div>
     </div>
 </section>
@@ -24,13 +24,13 @@
         @foreach (var car in popularCars)
         {
             <div class="col-md-6 col-xl-4">
-                <div class="card h-100 car-card">
+                <div class="card h-100 car-card border-0 shadow-sm">
                     <img src="@car.ImageUrl" class="card-img-top car-cover" alt="@car.Brand @car.Model" />
-                    <div class="card-body">
+                    <div class="card-body d-flex flex-column">
                         <h5 class="card-title">@car.Brand @car.Model</h5>
-                        <p class="text-secondary mb-1">@car.Year · @car.Category?.Name · @car.BodyType</p>
-                        <p class="fs-5 text-primary fw-bold">@car.Price.ToString("C0")</p>
-                        <a class="btn btn-outline-light" asp-controller="Cars" asp-action="Details" asp-route-id="@car.Id">Подробнее</a>
+                        <p class="text-muted mb-1">@car.Year · @car.Category?.Name</p>
+                        <p class="fs-5 text-primary fw-bold">@car.Price.ToString("N0") ₽</p>
+                        <a class="btn btn-outline-primary mt-auto" asp-controller="Cars" asp-action="Details" asp-route-id="@car.Id">Подробнее</a>
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
 </section>
 
 <section>
-    <h2 class="h3 mb-3">Категории</h2>
+    <h2 class="h3 mb-3">Категории автомобилей</h2>
     <div class="row g-3">
         @foreach (var category in categories)
         {

@@ -42,7 +42,7 @@ public class AccountController : Controller
             return RedirectToLocal(returnUrl);
         }
 
-        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+        ModelState.AddModelError(string.Empty, "Неверный email или пароль.");
         return View(model);
     }
 
@@ -69,7 +69,7 @@ public class AccountController : Controller
         var result = await _userManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {
-            var role = model.Role is "Admin" or "User" ? model.Role : "User";
+            var role = model.Role == "Администратор" ? "Admin" : "User";
             await _userManager.AddToRoleAsync(user, role);
             await _signInManager.SignInAsync(user, isPersistent: false);
             return RedirectToAction("Index", "Home");

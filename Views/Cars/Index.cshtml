@@ -1,43 +1,48 @@
 @model AutoSalonGrida.Models.ViewModels.CarCatalogViewModel
 @{
-    ViewData["Title"] = "Cars";
+    ViewData["Title"] = "Каталог";
 }
 
 <h1 class="mb-4">Каталог автомобилей</h1>
-<form method="get" class="card card-body mb-4 bg-dark-subtle border-0">
+<form method="get" class="card card-body mb-4 shadow-sm border-0">
     <div class="row g-2">
-        <div class="col-md-3"><input name="search" class="form-control" placeholder="Поиск: бренд, модель, категория" value="@Model.Search" /></div>
-        <div class="col-md-2"><select name="brand" class="form-select" asp-items="Model.Brands"><option value="">Все бренды</option></select></div>
-        <div class="col-md-2"><select name="categoryId" class="form-select" asp-items="Model.Categories"><option value="">Все категории</option></select></div>
-        <div class="col-md-2"><input name="minPrice" type="number" class="form-control" placeholder="Цена от" value="@Model.MinPrice" /></div>
-        <div class="col-md-2"><input name="maxPrice" type="number" class="form-control" placeholder="Цена до" value="@Model.MaxPrice" /></div>
-        <div class="col-md-2"><input name="minYear" type="number" class="form-control" placeholder="Год от" value="@Model.MinYear" /></div>
-        <div class="col-md-2"><input name="maxYear" type="number" class="form-control" placeholder="Год до" value="@Model.MaxYear" /></div>
-        <div class="col-md-2"><input name="bodyType" class="form-control" placeholder="Тип кузова" value="@Model.BodyType" /></div>
-        <div class="col-md-2">
+        <div class="col-md-3"><input name="search" class="form-control" placeholder="Поиск по марке или модели" value="@Model.Search" /></div>
+        <div class="col-md-2"><select name="brand" asp-items="Model.Brands" class="form-select"><option value="">Все марки</option></select></div>
+        <div class="col-md-2"><select name="categoryId" asp-items="Model.Categories" class="form-select"><option value="">Все категории</option></select></div>
+        <div class="col-md-1"><input name="minPrice" type="number" class="form-control" placeholder="Цена от" value="@Model.MinPrice" /></div>
+        <div class="col-md-1"><input name="maxPrice" type="number" class="form-control" placeholder="Цена до" value="@Model.MaxPrice" /></div>
+        <div class="col-md-1"><input name="minYear" type="number" class="form-control" placeholder="Год от" value="@Model.MinYear" /></div>
+        <div class="col-md-1"><input name="maxYear" type="number" class="form-control" placeholder="Год до" value="@Model.MaxYear" /></div>
+        <div class="col-md-1">
             <select name="sort" class="form-select">
-                <option value="">Цена по возрастанию</option>
-                <option value="price_desc" selected="@(Model.Sort=="price_desc")">Цена по убыванию</option>
-                <option value="year_asc" selected="@(Model.Sort=="year_asc")">Год по возрастанию</option>
-                <option value="year_desc" selected="@(Model.Sort=="year_desc")">Год по убыванию</option>
-                <option value="popular" selected="@(Model.Sort=="popular")">По популярности</option>
+                <option value="">Цена ↑</option>
+                <option value="price_desc" selected="@(Model.Sort=="price_desc")">Цена ↓</option>
+                <option value="year_asc" selected="@(Model.Sort=="year_asc")">Год ↑</option>
+                <option value="year_desc" selected="@(Model.Sort=="year_desc")">Год ↓</option>
             </select>
         </div>
-        <div class="col-md-2"><button class="btn btn-primary w-100">Применить</button></div>
     </div>
+    <div class="mt-2"><button class="btn btn-primary">Применить</button></div>
 </form>
 
 <div class="row g-4">
     @foreach (var car in Model.Cars)
     {
         <div class="col-md-6 col-xl-4">
-            <div class="card car-card h-100">
+            <div class="card car-card h-100 border-0 shadow-sm">
                 <img src="@car.ImageUrl" class="card-img-top car-cover" alt="@car.Brand @car.Model" />
                 <div class="card-body d-flex flex-column">
                     <h5>@car.Brand @car.Model</h5>
-                    <p class="text-secondary mb-1">@car.Year · @car.BodyType · @car.Category?.Name</p>
-                    <p class="fw-semibold text-primary fs-5">@car.Price.ToString("C0")</p>
-                    <a class="btn btn-outline-light mt-auto" asp-action="Details" asp-route-id="@car.Id">Подробнее</a>
+                    <p class="text-muted mb-1">@car.Year · @car.Category?.Name</p>
+                    <p class="fw-semibold text-primary fs-5">@car.Price.ToString("N0") ₽</p>
+                    <div class="d-flex gap-2 mt-auto">
+                        <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@car.Id">Подробнее</a>
+                        <form asp-controller="Cart" asp-action="Add" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="carId" value="@car.Id" />
+                            <button class="btn btn-primary" type="submit">Добавить в корзину</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
