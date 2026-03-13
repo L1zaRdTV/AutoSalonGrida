@@ -1,0 +1,72 @@
+@model AutoSalonGrida.Models.ViewModels.ProductIndexViewModel
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="card card-elevated mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">Search by name</label>
+                <input class="form-control" name="search" value="@Model.Search" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Category</label>
+                <select class="form-select" name="category" asp-items="Model.Categories">
+                    <option value="">All</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Sort</label>
+                <select class="form-select" name="sortOrder">
+                    <option value="">Name (A-Z)</option>
+                    <option value="name_desc">Name (Z-A)</option>
+                    <option value="date">Created date (oldest)</option>
+                    <option value="date_desc">Created date (newest)</option>
+                </select>
+            </div>
+            <div class="col-md-2 d-grid">
+                <button class="btn btn-primary" type="submit"><i class="fa-solid fa-magnifying-glass"></i> Apply</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card card-elevated">
+    <div class="card-body">
+        <table class="table table-striped table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>CreatedDate</th>
+                    <th>Status</th>
+                    <th>Price</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Products)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@item.Category</td>
+                    <td>@item.CreatedDate.ToString("yyyy-MM-dd")</td>
+                    <td>@item.Status</td>
+                    <td>@item.Price.ToString("C")</td>
+                    <td class="text-end">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Details</a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

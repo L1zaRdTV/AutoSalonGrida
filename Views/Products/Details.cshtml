@@ -1,0 +1,13 @@
+@model AutoSalonGrida.Models.Product
+@{ ViewData["Title"] = "Details"; }
+<div class="card card-elevated"><div class="card-body">
+<h3>@Model.Name</h3>
+<p>@Model.Description</p>
+<ul>
+<li>Category: @Model.Category</li>
+<li>Created: @Model.CreatedDate.ToString("yyyy-MM-dd")</li>
+<li>Status: @Model.Status</li>
+<li>Price: @Model.Price.ToString("C")</li>
+</ul>
+<a asp-action="Index" class="btn btn-secondary">Back</a>
+</div></div>

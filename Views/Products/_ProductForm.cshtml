@@ -1,0 +1,19 @@
+@model AutoSalonGrida.Models.Product
+<div class="card card-elevated">
+    <div class="card-body">
+        <h3>@ViewData["Title"] Record</h3>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Id" type="hidden" />
+            <div class="mb-3"><label asp-for="Name" class="form-label"></label><input asp-for="Name" class="form-control" /><span asp-validation-for="Name" class="text-danger"></span></div>
+            <div class="mb-3"><label asp-for="Description" class="form-label"></label><textarea asp-for="Description" class="form-control"></textarea><span asp-validation-for="Description" class="text-danger"></span></div>
+            <div class="mb-3"><label asp-for="Category" class="form-label"></label><input asp-for="Category" class="form-control" /><span asp-validation-for="Category" class="text-danger"></span></div>
+            <div class="mb-3"><label asp-for="CreatedDate" class="form-label"></label><input asp-for="CreatedDate" type="date" class="form-control" /><span asp-validation-for="CreatedDate" class="text-danger"></span></div>
+            <div class="mb-3"><label asp-for="Status" class="form-label"></label><input asp-for="Status" class="form-control" /><span asp-validation-for="Status" class="text-danger"></span></div>
+            <div class="mb-3"><label asp-for="Price" class="form-label"></label><input asp-for="Price" class="form-control" /><span asp-validation-for="Price" class="text-danger"></span></div>
+            <button class="btn btn-primary" type="submit">Save</button>
+            <a asp-action="Index" class="btn btn-secondary">Back</a>
+        </form>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
